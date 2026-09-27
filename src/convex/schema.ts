@@ -32,12 +32,23 @@ const schema = defineSchema(
       role: v.optional(roleValidator), // role of the user. do not remove
     }).index("email", ["email"]), // index for the email. do not remove or modify
 
-    // add other tables here
-
-    // tableName: defineTable({
-    //   ...
-    //   // table fields
-    // }).index("by_field", ["field"])
+    // Tool feedback / bug reports sent to the developer's Telegram bot
+    feedbackReports: defineTable({
+      createdAt: v.number(),
+      kind: v.union(v.literal("bug"), v.literal("feedback"), v.literal("tool")),
+      tool: v.optional(v.string()),
+      message: v.string(),
+      screenshotUrl: v.optional(v.string()),
+      userEmail: v.optional(v.string()),
+      status: v.optional(
+        v.union(
+          v.literal("pending"),
+          v.literal("sent"),
+          v.literal("failed"),
+        ),
+      ),
+      error: v.optional(v.string()),
+    }).index("by_created", ["createdAt"]),
   },
   {
     schemaValidation: false,
